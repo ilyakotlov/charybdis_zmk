@@ -1,0 +1,44 @@
+/*
+ * Halves linked over UART instead of BLE. Wires cross between the halves:
+ *   left P1.11 (silkscreen 111) -> right P1.13 (113)
+ *   left P1.13 (113)            <- right P1.11 (111)
+ *   left GND                    -- right GND
+ *
+ * uart1 because uart0 shares its peripheral with the trackball's spi0, and the
+ * usual serial pins (P0.06, P0.08) are trackball lines.
+ */
+
+&pinctrl {
+    uart1_wired_default: uart1_wired_default {
+        group1 {
+            psels = <NRF_PSEL(UART_RX, 1, 13)>;
+            bias-pull-up;
+        };
+        group2 {
+            psels = <NRF_PSEL(UART_TX, 1, 11)>;
+        };
+    };
+
+    uart1_wired_sleep: uart1_wired_sleep {
+        group1 {
+            psels = <NRF_PSEL(UART_RX, 1, 13)>,
+                <NRF_PSEL(UART_TX, 1, 11)>;
+            low-power-enable;
+        };
+    };
+};
+
+&uart1 {
+    status = "okay";
+    current-speed = <115200>;
+    pinctrl-0 = <&uart1_wired_default>;
+    pinctrl-1 = <&uart1_wired_sleep>;
+    pinctrl-names = "default", "sleep";
+};
+
+/ {
+    wired_split {
+        compatible = "zmk,wired-split";
+        device = <&uart1>;
+    };
+};
