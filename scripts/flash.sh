@@ -9,11 +9,12 @@ UF2_DIRS=("${UF2_DIR:-$HOME/Downloads}" "${UF2_DIR:-$HOME/Downloads}/charybdis-f
 MOUNT_POINT="/run/media/$USER/NICENANO"
 
 usage() {
-    echo "Usage: $0 [left|right|dongle-left|dongle-right|dongle]"
+    echo "Usage: $0 [left|right|dongle-left|dongle-right|dongle|wired-left|wired-right]"
     echo ""
     echo "  left, right                 bt/usb format firmware"
     echo "  dongle-left, dongle-right   dongle format halves"
     echo "  dongle                      the dongle itself"
+    echo "  wired-left, wired-right     halves linked by UART"
     echo ""
     echo "Set UF2_DIR to override the search root (default: \$HOME/Downloads)."
     exit 1
@@ -54,6 +55,8 @@ flash() {
         dongle-left)  uf2_name="charybdis_mini_dongle_LEFT.uf2" ;;
         dongle-right) uf2_name="charybdis_mini_dongle_RIGHT.uf2" ;;
         dongle)       uf2_name="charybdis_mini_dongle.uf2" ;;
+        wired-left)   uf2_name="charybdis_mini_wired_LEFT.uf2" ;;
+        wired-right)  uf2_name="charybdis_mini_wired_RIGHT.uf2" ;;
         *)            usage ;;
     esac
 
@@ -79,6 +82,6 @@ flash() {
 }
 
 case "$TARGET" in
-    left|right|dongle-left|dongle-right|dongle) flash "$TARGET" ;;
+    left|right|dongle-left|dongle-right|dongle|wired-left|wired-right) flash "$TARGET" ;;
     *) usage ;;
 esac

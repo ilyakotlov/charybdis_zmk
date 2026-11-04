@@ -78,6 +78,18 @@ include:
   #   format: dongle
   #   artifact-name: charybdis_colemak_dongle
 
+  # QWERTY Wired (halves linked by UART, right half on USB)
+  - board: nice_nano_v2
+    shield: charybdis_left
+    keymap: qwerty
+    format: wired
+    artifact-name: charybdis_mini_wired_LEFT
+  - board: nice_nano_v2
+    shield: charybdis_right
+    keymap: qwerty
+    format: wired
+    artifact-name: charybdis_mini_wired_RIGHT
+
   # Firmware Reset
   - board: nice_nano_v2
     shield: settings_reset
