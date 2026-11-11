@@ -3,3 +3,8 @@ if(CONFIG_CHARYBDIS_ADV_WATCHDOG)
   zephyr_include_directories(${APPLICATION_SOURCE_DIR}/include)
   zephyr_library_sources(src/adv_watchdog.c)
 endif()
+
+# PMW3610 trackball sensor driver (vendored, with timer polling)
+if(CONFIG_PMW3610)
+  add_subdirectory(drivers/pmw3610)
+endif()

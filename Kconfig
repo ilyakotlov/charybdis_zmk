@@ -12,3 +12,5 @@ config CHARYBDIS_ADV_WATCHDOG_INTERVAL_MS
 	int "Retry interval while disconnected"
 	default 3000
 	depends on CHARYBDIS_ADV_WATCHDOG
+
+rsource "drivers/pmw3610/Kconfig"
