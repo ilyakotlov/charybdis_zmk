@@ -1,62 +1,7 @@
 layout: {zmk_keyboard: charybdis}
 layers:
-  BASE:
-  - ESCAPE
-  - '1'
-  - '2'
-  - '3'
-  - '4'
-  - '5'
-  - '6'
-  - '7'
-  - '8'
-  - '9'
-  - '0'
-  - BSPC
-  - TAB
-  - Q
-  - W
-  - E
-  - R
-  - T
-  - Y
-  - U
-  - I
-  - O
-  - P
-  - \
-  - LCTRL
-  - A
-  - S
-  - D
-  - F
-  - G
-  - H
-  - J
-  - K
-  - L
-  - ;
-  - ''''
-  - LSHFT
-  - Z
-  - X
-  - C
-  - V
-  - B
-  - N
-  - M
-  - ','
-  - .
-  - /
-  - RET
-  - LALT
-  - {t: SPACE, h: FN}
-  - LGUI
-  - RALT
-  - {t: SPACE, h: FKEYS}
-  - L CLK
-  - R CLK
-  - BSPC
+  BASE: [ESCAPE, '1', '2', '3', '4', '5', '6', '7', '8', '9', '0', BSPC, TAB, Q, W, E, R, T, Y, U, I, O, P, '[', LSHFT, A, S, D, F, G, H, J, K, L, ;, '''', LCTRL,
+    Z, X, C, V, B, N, M, ',', ., /, RSHFT, LALT, SPACE, LGUI, LCTRL, RET, FN, LALT, FKEYS]
   FN:
   - '`'
   - {t: ▽, type: trans}
@@ -74,8 +19,8 @@ layers:
   - MUTE
   - VOL DN
   - VOL UP
-  - {t: ▽, type: trans}
-  - {t: ▽, type: trans}
+  - PREV
+  - NEXT
   - {t: ▽, type: trans}
   - INS
   - PSCRN
@@ -86,7 +31,7 @@ layers:
   - {t: ▽, type: trans}
   - BACK
   - FWD
-  - {t: ▽, type: trans}
+  - PP
   - {t: ▽, type: trans}
   - LEFT
   - DOWN
@@ -107,11 +52,11 @@ layers:
   - {t: ▽, type: trans}
   - {t: ▽, type: trans}
   - LALT
-  - {t: SPACE, type: held}
+  - SPACE
   - {t: ▽, type: trans}
   - {t: ▽, type: trans}
   - {t: ▽, type: trans}
-  - {t: ▽, type: trans}
+  - {type: held}
   - {t: ▽, type: trans}
   - DEL
   BT:
@@ -281,10 +226,10 @@ layers:
   - {t: ▽, type: trans}
   - {t: ▽, type: trans}
   - {t: ▽, type: trans}
+  - {t: ▽, type: trans}
+  - {t: ▽, type: trans}
+  - {t: ▽, type: trans}
   - {type: held}
-  - {t: ▽, type: trans}
-  - {t: ▽, type: trans}
-  - {t: ▽, type: trans}
   GAME:
   - {t: ▽, type: trans}
   - {t: ▽, type: trans}
