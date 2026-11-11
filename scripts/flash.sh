@@ -50,13 +50,13 @@ flash() {
     local uf2_name uf2_file
 
     case "$target" in
-        left)         uf2_name="charybdis_mini_LEFT.uf2" ;;
-        right)        uf2_name="charybdis_mini_RIGHT.uf2" ;;
-        dongle-left)  uf2_name="charybdis_mini_dongle_LEFT.uf2" ;;
-        dongle-right) uf2_name="charybdis_mini_dongle_RIGHT.uf2" ;;
-        dongle)       uf2_name="charybdis_mini_dongle.uf2" ;;
-        wired-left)   uf2_name="charybdis_mini_wired_LEFT.uf2" ;;
-        wired-right)  uf2_name="charybdis_mini_wired_RIGHT.uf2" ;;
+        left)         uf2_name="charybdis_4x6_LEFT.uf2" ;;
+        right)        uf2_name="charybdis_4x6_RIGHT.uf2" ;;
+        dongle-left)  uf2_name="charybdis_4x6_dongle_LEFT.uf2" ;;
+        dongle-right) uf2_name="charybdis_4x6_dongle_RIGHT.uf2" ;;
+        dongle)       uf2_name="charybdis_4x6_dongle.uf2" ;;
+        wired-left)   uf2_name="charybdis_4x6_wired_LEFT.uf2" ;;
+        wired-right)  uf2_name="charybdis_4x6_wired_RIGHT.uf2" ;;
         *)            usage ;;
     esac
 

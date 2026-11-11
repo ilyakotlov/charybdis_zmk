@@ -23,13 +23,15 @@ include:
     shield: charybdis_left
     keymap: qwerty
     format: bt
-    artifact-name: charybdis_mini_LEFT
+    artifact-name: charybdis_4x6_LEFT
   - board: nice_nano_v2
     shield: charybdis_right
     keymap: qwerty
     format: bt
-    artifact-name: charybdis_mini_RIGHT
+    artifact-name: charybdis_4x6_RIGHT
     snippet: studio-rpc-usb-uart
+    # ZMK Studio on, without the unlock key combo
+    cmake-args: -DCONFIG_ZMK_STUDIO=y -DCONFIG_ZMK_STUDIO_LOCKING=n
 
   # # Colemak DH BT
   # - board: nice_nano_v2
@@ -49,17 +51,17 @@ include:
     shield: charybdis_left
     keymap: qwerty
     format: dongle
-    artifact-name: charybdis_mini_dongle_LEFT
+    artifact-name: charybdis_4x6_dongle_LEFT
   - board: nice_nano_v2
     shield: charybdis_right
     keymap: qwerty
     format: dongle
-    artifact-name: charybdis_mini_dongle_RIGHT
+    artifact-name: charybdis_4x6_dongle_RIGHT
   - board: nice_nano_v2
     shield: charybdis_dongle
     keymap: qwerty
     format: dongle
-    artifact-name: charybdis_mini_dongle
+    artifact-name: charybdis_4x6_dongle
 
   # # Colemak DH Dongle
   # - board: nice_nano_v2
@@ -83,12 +85,12 @@ include:
     shield: charybdis_left
     keymap: qwerty
     format: wired
-    artifact-name: charybdis_mini_wired_LEFT
+    artifact-name: charybdis_4x6_wired_LEFT
   - board: nice_nano_v2
     shield: charybdis_right
     keymap: qwerty
     format: wired
-    artifact-name: charybdis_mini_wired_RIGHT
+    artifact-name: charybdis_4x6_wired_RIGHT
 
   # Firmware Reset
   - board: nice_nano_v2
