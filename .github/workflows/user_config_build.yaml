@@ -114,7 +114,8 @@ jobs:
       - name: Copy config files to isolated temporary directory
         run: |
           if [ "${{ env.base_dir }}" != "${GITHUB_WORKSPACE}" ]; then
-            apt-get -qq update && apt-get -q install -o Dpkg::Progress-Fancy="0" -o APT::Color="0" -o Dpkg::Use-Pty="0" tree
+            apt-get -qq update && apt-get -q install -o Dpkg::Progress-Fancy="0" -o APT::Color="0" -o Dpkg::Use-Pty="0" tree \
+              || echo "tree not installed (apt mirror unreachable), file list will use ls -R"
             
             # Define base directory for config
             base_config_path="${{ env.base_dir }}/${{ inputs.config_path }}"
@@ -155,8 +156,8 @@ jobs:
           echo "Removed extra shields"
 
           echo "Build files list:"
-          tree "${{ env.base_dir }}"
-          tree "${GITHUB_WORKSPACE}/boards/shields"
+          tree "${{ env.base_dir }}" 2>/dev/null || ls -R "${{ env.base_dir }}"
+          tree "${GITHUB_WORKSPACE}/boards/shields" 2>/dev/null || ls -R "${GITHUB_WORKSPACE}/boards/shields"
 
       - name: Cache west modules
         uses: actions/cache@v4
