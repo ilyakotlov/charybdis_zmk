@@ -31,14 +31,14 @@
 
     /* Trackball (standard ZMK input listener; replaces badjeff's input-behavior-listener,
        whose main branch no longer builds with ZMK v0.3).
-       - base: cursor move, scaled 13/20 (was 1/2, +30%), both axes inverted
+       - base: cursor move, scaled 9/10, both axes inverted
        - moving the ball turns on the MOUSE layer, it switches off 700 ms after the ball stops
        - on FN (hold left space) and SCROLL layers the ball scrolls vertically */
 
     trackball_listener {
         compatible = "zmk,input-listener";
         device = <&vtrackball>;
-        input-processors = <&zip_xy_scaler 13 20>,   /* 0.65 = 1/2 + 30% */
+        input-processors = <&zip_xy_scaler 9 10>,    /* 0.9 (was 0.65, +38%) */
                            <&zip_xy_transform (INPUT_TRANSFORM_X_INVERT | INPUT_TRANSFORM_Y_INVERT)>,
                            <&zip_temp_layer 6 700>;
 
