@@ -1,3 +1,7 @@
+# Current customer keymap
+
+See [KEYMAP.md](KEYMAP.md) for the vendor-style QWERTY layout, dedicated SETUP key and flashing/migration instructions. This is the authoritative guide to the current bindings; upstream examples below may describe other variants.
+
 [![.github/workflows/build.yml](https://github.com/280Zo/charybdis-wireless-mini-zmk-firmware/actions/workflows/build.yml/badge.svg)](https://github.com/280Zo/charybdis-wireless-mini-zmk-firmware/actions/workflows/build.yml)
 
 ## Intro
