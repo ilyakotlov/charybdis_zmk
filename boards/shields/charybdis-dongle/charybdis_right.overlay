@@ -30,7 +30,7 @@
 
 	row-gpios
     = <&gpio0 31 GPIO_ACTIVE_HIGH>
-    , <&gpio0 10 GPIO_ACTIVE_HIGH>  /* row 2 (Y U I O P) is wired to P0.10 on this half */
+    , <&gpio1 11 GPIO_ACTIVE_HIGH>  /* row 2: P1.15 is dead on this controller, jumpered to P1.11 */
     , <&gpio0 24 GPIO_ACTIVE_HIGH>
 	  , <&gpio0 22 GPIO_ACTIVE_HIGH>
     , <&gpio1 6  GPIO_ACTIVE_HIGH>
@@ -55,14 +55,4 @@
 		device = <&trackball>;
 		relay-channel = <111>;
 	};
-};
-
-/* P0.10 is an NFC pin on the nRF52840: switch the NFC pins to plain GPIOs so row 2 can use it,
-   and release P0.10 from the (unused) RGB underglow SPI. */
-&uicr {
-    nfct-pins-as-gpios;
-};
-
-&spi3 {
-    status = "disabled";
-};
+};
