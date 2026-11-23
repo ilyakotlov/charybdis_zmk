@@ -22,6 +22,10 @@
 #include <zephyr/logging/log.h>
 LOG_MODULE_REGISTER(pmw3610, CONFIG_PMW3610_LOG_LEVEL);
 
+#if CONFIG_PMW3610_POLL_INTERVAL_MS > 0
+static void pmw3610_set_poll_fast(struct pixart_data *data, bool fast);
+#endif
+
 //////// Sensor initialization steps definition //////////
 // init is done in non-blocking manner (i.e., async), a //
 // delayable work is defined for this purpose           //
@@ -422,8 +426,9 @@ static void pmw3610_async_init(struct k_work *work) {
             LOG_INF("PMW3610 initialized");
             pmw3610_set_interrupt(dev, true);
 #if CONFIG_PMW3610_POLL_INTERVAL_MS > 0
-            k_timer_start(&data->poll_timer, K_MSEC(CONFIG_PMW3610_POLL_INTERVAL_MS),
-                          K_MSEC(CONFIG_PMW3610_POLL_INTERVAL_MS));
+            data->zmk_active = true;
+            data->last_motion = k_uptime_get();
+            pmw3610_set_poll_fast(data, true);
             LOG_INF("PMW3610 polling every %d ms", CONFIG_PMW3610_POLL_INTERVAL_MS);
 #endif
         } else {
@@ -431,6 +436,19 @@ static void pmw3610_async_init(struct k_work *work) {
         }
     }
 }
+
+#if CONFIG_PMW3610_POLL_INTERVAL_MS > 0
+/* Polling speed follows the trackball's own motion, not only ZMK's activity state:
+   ZMK v0.3 counts key presses as activity but not pointer input, so with the ball
+   alone ZMK goes IDLE after CONFIG_ZMK_IDLE_TIMEOUT and slow idle polling made the
+   cursor move in 100 ms steps. */
+#define PMW3610_SLOW_DOWN_AFTER_MS 1000
+static void pmw3610_set_poll_fast(struct pixart_data *data, bool fast) {
+    int ms = fast ? CONFIG_PMW3610_POLL_INTERVAL_MS : CONFIG_PMW3610_POLL_IDLE_INTERVAL_MS;
+    data->poll_fast = fast;
+    k_timer_start(&data->poll_timer, K_MSEC(ms), K_MSEC(ms));
+}
+#endif
 
 static int pmw3610_report_data(const struct device *dev) {
     struct pixart_data *data = dev->data;
@@ -466,6 +484,14 @@ static int pmw3610_report_data(const struct device *dev) {
     if (x || y) {
         LOG_DBG("x/y: %d/%d", x, y);
     }
+#if CONFIG_PMW3610_POLL_INTERVAL_MS > 0
+    if (x || y) {
+        data->last_motion = k_uptime_get();
+        if (!data->poll_fast) {
+            pmw3610_set_poll_fast(data, true);
+        }
+    }
+#endif
 
 #ifdef CONFIG_PMW3610_SMART_ALGORITHM
     int16_t shutter = ((int16_t)(buf[PMW3610_SHUTTER_H_POS] & 0x01) << 8) 
@@ -482,7 +508,13 @@ static int pmw3610_report_data(const struct device *dev) {
 
 #if CONFIG_PMW3610_REPORT_INTERVAL_MIN > 0
     // purge accumulated delta, if last sampled had not been reported on last report tick
+    /* With polling, a sample arriving a few ms late (busy work queue, BLE) is normal:
+       only drop the unreported delta when it is really stale. */
+#if CONFIG_PMW3610_POLL_INTERVAL_MS > 0
+    if (now - last_smp_time >= MAX(CONFIG_PMW3610_REPORT_INTERVAL_MIN, 100)) {
+#else
     if (now - last_smp_time >= CONFIG_PMW3610_REPORT_INTERVAL_MIN) {
+#endif
         dx = 0;
         dy = 0;
     }
@@ -536,6 +568,12 @@ static void pmw3610_work_callback(struct k_work *work) {
     const struct device *dev = data->dev;
     pmw3610_report_data(dev);
     pmw3610_set_interrupt(dev, true);
+#if CONFIG_PMW3610_POLL_INTERVAL_MS > 0
+    if (data->poll_fast && !data->zmk_active &&
+        k_uptime_get() - data->last_motion > PMW3610_SLOW_DOWN_AFTER_MS) {
+        pmw3610_set_poll_fast(data, false);
+    }
+#endif
 }
 
 static int pmw3610_init_irq(const struct device *dev) {
@@ -734,9 +772,11 @@ static int on_activity_state(const zmk_event_t *eh) {
         }
         pmw3610_set_performance(pmw3610_devs[i], enable);
 #if CONFIG_PMW3610_POLL_INTERVAL_MS > 0
-        {
-            int ms = enable ? CONFIG_PMW3610_POLL_INTERVAL_MS : CONFIG_PMW3610_POLL_IDLE_INTERVAL_MS;
-            k_timer_start(&data->poll_timer, K_MSEC(ms), K_MSEC(ms));
+        /* ACTIVE: poll fast at once. IDLE/SLEEP: the work callback slows polling down
+           once the ball has also been still for PMW3610_SLOW_DOWN_AFTER_MS. */
+        data->zmk_active = enable;
+        if (enable && !data->poll_fast) {
+            pmw3610_set_poll_fast(data, true);
         }
 #endif
     }

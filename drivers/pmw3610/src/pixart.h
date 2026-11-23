@@ -23,6 +23,9 @@ struct pixart_data {
     struct gpio_callback         irq_gpio_cb; // motion pin irq callback
     struct k_work                trigger_work; // realtrigger job
     struct k_timer               poll_timer; // periodic polling (CONFIG_PMW3610_POLL_INTERVAL_MS)
+    bool                         poll_fast; // polling at CONFIG_PMW3610_POLL_INTERVAL_MS (else the idle interval)
+    bool                         zmk_active; // last ZMK activity state was ACTIVE
+    int64_t                      last_motion; // uptime of the last non-zero motion read
 
     struct k_work_delayable      init_work; // the work structure for delayable init steps
     int                          async_init_step;
