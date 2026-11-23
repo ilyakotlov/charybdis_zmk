@@ -493,6 +493,33 @@ static int pmw3610_report_data(const struct device *dev) {
     }
 #endif
 
+#ifdef CONFIG_PMW3610_DIAG
+    {
+        static int64_t diag_t0;
+        static uint32_t n_reads, n_motion;
+        static int32_t sx, sy;
+        static uint8_t q_min = 255, q_max;
+        static uint32_t q_sum;
+        static uint16_t sh_min = 0xFFFF, sh_max;
+        int64_t t = k_uptime_get();
+        uint8_t q = buf[4];
+        uint16_t sh = ((uint16_t)(buf[PMW3610_SHUTTER_H_POS] & 0x01) << 8) + buf[PMW3610_SHUTTER_L_POS];
+        n_reads++;
+        if (buf[0] & 0x80) n_motion++;
+        sx += x; sy += y; q_sum += q;
+        q_min = MIN(q_min, q); q_max = MAX(q_max, q);
+        sh_min = MIN(sh_min, sh); sh_max = MAX(sh_max, sh);
+        if (t - diag_t0 >= 100) {
+            if (n_motion || sx || sy) {
+                LOG_INF("diag %lldms reads=%u motion=%u dx=%d dy=%d squal=%u..%u avg=%u shutter=%u..%u",
+                        t - diag_t0, n_reads, n_motion, sx, sy, q_min, q_max, q_sum / n_reads, sh_min, sh_max);
+            }
+            diag_t0 = t; n_reads = n_motion = 0; sx = sy = 0; q_sum = 0;
+            q_min = 255; q_max = 0; sh_min = 0xFFFF; sh_max = 0;
+        }
+    }
+#endif
+
 #ifdef CONFIG_PMW3610_SMART_ALGORITHM
     int16_t shutter = ((int16_t)(buf[PMW3610_SHUTTER_H_POS] & 0x01) << 8) 
                     + buf[PMW3610_SHUTTER_L_POS];

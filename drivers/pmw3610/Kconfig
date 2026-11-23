@@ -54,6 +54,12 @@ config PMW3610_POLL_IDLE_INTERVAL_MS
     int "Poll interval while the keyboard is idle"
     default 100
 
+config PMW3610_DIAG
+    bool "Log sensor diagnostics (surface quality, shutter, motion) every 100 ms"
+    help
+      For troubleshooting jerky tracking over USB logging: prints how many reads
+      happened, how many reported motion, the summed X/Y and SQUAL/shutter range.
+
 config PMW3610_SMART_ALGORITHM
   bool "Enable an algorithm of PMW3610 to enhance surface coverage"
   default y
