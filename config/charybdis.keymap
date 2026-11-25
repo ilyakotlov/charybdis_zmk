@@ -132,5 +132,5 @@
     require-prior-idle-ms = <250>;
     // Mouse actions remain on POINTER; ordinary typing exits the automatic layer.
     // Manual mouse access uses a separate layer so the auto timer cannot clear it.
-    excluded-positions = <12 25 26 27 28 31 32 33 34 38 39 47 48 49 54 55>;
+    excluded-positions = <12 25 26 27 28 31 32 33 34 38 39 44 45 47 48 49 54 55>;
 };
