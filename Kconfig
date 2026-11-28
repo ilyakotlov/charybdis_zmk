@@ -13,4 +13,16 @@ config CHARYBDIS_ADV_WATCHDOG_INTERVAL_MS
 	default 3000
 	depends on CHARYBDIS_ADV_WATCHDOG
 
+config CHARYBDIS_MOUSE_RELEASE
+	bool "Resend the mouse button state after endpoint changes and reconnects"
+	default y
+	depends on ZMK_POINTING
+	depends on !ZMK_SPLIT || ZMK_SPLIT_ROLE_CENTRAL
+	help
+	  ZMK v0.3 clears mouse buttons on an endpoint switch without telling the
+	  host, and sends nothing on BLE reconnect. A button held at that moment
+	  stays pressed on the host (no hover, that button stops working for every
+	  pointing device). This sends the current button state to USB and BLE
+	  after each endpoint change and active-profile (re)connect.
+
 rsource "drivers/pmw3610/Kconfig"

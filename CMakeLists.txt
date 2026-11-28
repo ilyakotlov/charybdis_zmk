@@ -1,7 +1,8 @@
-if(CONFIG_CHARYBDIS_ADV_WATCHDOG)
+if(CONFIG_CHARYBDIS_ADV_WATCHDOG OR CONFIG_CHARYBDIS_MOUSE_RELEASE)
   zephyr_library()
   zephyr_include_directories(${APPLICATION_SOURCE_DIR}/include)
-  zephyr_library_sources(src/adv_watchdog.c)
+  zephyr_library_sources_ifdef(CONFIG_CHARYBDIS_ADV_WATCHDOG src/adv_watchdog.c)
+  zephyr_library_sources_ifdef(CONFIG_CHARYBDIS_MOUSE_RELEASE src/mouse_release.c)
 endif()
 
 # PMW3610 trackball sensor driver (vendored, with timer polling)
